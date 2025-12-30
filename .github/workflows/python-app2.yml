@@ -1,0 +1,34 @@
+# 깃허브 액션을 사용하여 두 개 이상의 파이썬 버전에 대해 깃허브 프로젝트 테스트를 수행해보자.
+
+name: Python application
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
+    
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Install dependencies
+      run: |
+        make install
+    - name: Lint 
+      run: |
+        make lint
+    - name: Test
+      run: |
+        make test
